@@ -1449,7 +1449,7 @@ state.cart.forEach(c=>{
     if(c.sharp>0)weaponInfo.push(txt);
   }
 });
-s.innerHTML=`<div class="stat-box"><div class="label">HP</div><div class="value">${hp}</div></div><div class="stat-box"><div class="label">Очки магии/зверей</div><div class="value">${spent}/${pool}</div><div class="label">общий пул</div></div>${weaponInfo.length?`<div class="stat-box"><div class="label">Заточенное оружие</div>${weaponInfo.map(w=>`<div class="value" style="font-size:13px;font-weight:normal;color:#5ae05a;margin-top:4px">${w}</div>`).join('')}</div>`:''}`;}
+s.innerHTML=`<div class="stat-box"><div class="label">Здоровье</div><div class="value">${hp}</div></div><div class="stat-box"><div class="label">Очки магии/зверей</div><div class="value">${spent}/${pool}</div><div class="label">общий пул</div></div>${weaponInfo.length?`<div class="stat-box"><div class="label">Заточенное оружие</div>${weaponInfo.map(w=>`<div class="value" style="font-size:13px;font-weight:normal;color:#5ae05a;margin-top:4px">${w}</div>`).join('')}</div>`:''}`;}
 function toggleXP(){state.xpOpen=!state.xpOpen;
 document.getElementById('xp-section').classList.toggle('hidden',!state.xpOpen);
 if(state.xpOpen){renderXP();window.scrollTo(0,document.getElementById('xp-section').offsetTop-16);}}
