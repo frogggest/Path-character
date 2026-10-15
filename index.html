@@ -309,10 +309,10 @@ const POTIONS=[
 {id:'elemental_bomb_ice',name:'Стихийная бомба (лёд)'},
 {id:'elemental_bomb_acid',name:'Стихийная бомба (кислота)'},
 {id:'iron_skin',name:'Отвар железной кожи'},
-{id:'special_poison',name:'Специализированный яд'},
 {id:'blind_gas',name:'Ослепляющий газ'},
 {id:'duplicate',name:'Дубликат'}
 ];
+['Гуманоиды','Великаны','Ящеры','Гоблины','Драконы','Нежить','Демоны','Аберрации','Ангелы','Феи','Животные','Призраки','Элементали'].forEach(e=>{POTIONS.push({id:'poison_'+e,name:'Яд: '+e});});
 const HEAL_POTION_LEVELS=[
   {price:10,heal:2},
   {price:20,heal:3},
@@ -681,7 +681,9 @@ const fireBlock=document.getElementById('alchemy-fire-block');
 fireBlock.innerHTML=`<div class="skill-item"><span class="skill-name">Алхимический огонь (макс 4)</span><input type="number" min="0" max="4" value="${state.alchemyFire||0}" onchange="setAlchemyFire(this.value)"><span class="skill-total">${state.alchemyFire||0} шт.</span></div>`;
 const list=document.getElementById('alchemy-list');list.innerHTML='';
 POTIONS.forEach(p=>{const v=state.potions[p.id]||0;
-list.innerHTML+=`<div class="skill-item"><span class="skill-name">${p.name} <span class="skill-attr">(${p.effect})</span></span><input type="number" min="0" value="${v}" onchange="setPotion('${p.id}',this.value)"><span class="skill-total">${v>0?v+' шт.':''}</span></div>`;});}
+const eff=p.effect?` <span class="skill-attr">(${p.effect})</span>`:'';
+list.innerHTML+=`<div class="skill-item"><span class="skill-name">${p.name}${eff}</span><input type="number" min="0" value="${v}" onchange="setPotion('${p.id}',this.value)"><span class="skill-total">${v>0?v+' шт.':''}</span></div>`;});
+}
 function setPotion(id,v){v=Math.max(0,parseInt(v)||0);if(v===0)delete state.potions[id];else state.potions[id]=v;render();}
 function setAlchemyFire(v){v=Math.max(0,Math.min(4,parseInt(v)||0));state.alchemyFire=v;render();}
 function getSpellEnhanceLevel(id){return state.spellEnhance[id]||0;}
