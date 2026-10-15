@@ -296,7 +296,9 @@ necromancy:{name:'Некромантия',list:['Усыхание','Вытяги
 transmutation:{name:'Трансмутация',list:['Каменная кожа','Ускорение','Коррозия','Увеличение','Уменьшение','Жабры','Полиморф','Кошачья грация','Бычья выносливость','Когти','Трансфигурация','Туман','Глаза кошки','Перевертыш']},
 enchantment:{name:'Очарование',list:['Дружба','Провокация','Истерика','Испуг','Повеление','Страх','Героизм','Сон','Цветные брызги']},
 abjuration:{name:'Ограждение',list:['Щит','Стихийный щит: Земля','Стихийный щит: Огонь','Стихийный щит: Кислота','Стихийный щит: Молния','Стихийный щит: Лёд','Оберег','Стена','Антимагия','Отражение заклинаний','Замок']},
-conjuration:{name:'Созидание',list:['Лечение','Призыв','Призыв стаи','Призыв элементаля: Огонь','Призыв элементаля: Молния','Призыв элементаля: Вода','Призыв элементаля: Земля','Призыв элементаля: Воздух','Ремонт']}
+conjuration:{name:'Созидание',list:['Лечение','Призыв','Призыв стаи','Призыв элементаля: Огонь','Призыв элементаля: Молния','Призыв элементаля: Вода','Призыв элементаля: Земля','Призыв элементаля: Воздух','Ремонт']},
+illusion:{name:'Иллюзия',list:['Малый образ','Безмолвный образ','Маскировка','Невидимость','Огромный образ','Обманка','Зеркало']},
+divination:{name:'Прорицание',list:['Обнаружение магии','Чтение','Поиск предмета','Предчувствие','Увидеть невидимое','Истинное зрение','Поиск существа']}
 };
 const POTIONS=[
 {id:'heal_potion',name:'Зелье лечения'},
@@ -412,13 +414,111 @@ shields:{name:'Щиты',items:[
 {id:'largeshield',name:'Большой щит',price:40,def:3,restricted:SHIELD_RESTRICTED},
 {id:'tower',name:'Башенный щит',price:55,def:4,note:'-2 ЛВК, треб СИЛ 5+, ТЕЛ 6+',restricted:SHIELD_RESTRICTED}]},
 gear:{name:'Снаряжение и расходники',items:[
-{id:'torch',name:'Факел',price:3,note:'Освещение'},{id:'healpotion_base',name:'Зелье лечения',price:10,note:'лечит 2хп'},
-{id:'food_base',name:'Еда',price:5,note:'восстанавливает 1хп'},{id:'resurrect',name:'Свиток воскрешения',price:250,note:'Возврат к жизни'},
-{id:'rope',name:'Веревка',price:7,note:'Подъёмы'},{id:'lockpick',name:'Отмычка',price:10,note:'Взлом'},
+{id:'torch',name:'Факел',price:3,note:'Освещение'},
+{id:'healpotion_base',name:'Зелье лечения',price:10,note:'лечит 2хп'},
+{id:'food_base',name:'Еда',price:5,note:'восстанавливает 1хп'},
+{id:'resurrect',name:'Свиток воскрешения',price:250,note:'Возврат к жизни'},
+{id:'rope',name:'Веревка',price:7,note:'Подъёмы'},
+{id:'lockpick',name:'Отмычка',price:10,note:'Взлом'},
 {id:'alchemy',name:'Алхимический набор (1 элемент)',price:20,note:'Только алхимику',only:['alchemist']},
 {id:'buffscroll',name:'Свиток усиления',price:30,note:'+1 к заклинанию, +20 за следующий уровень'},
-{id:'mana_elixir_base',name:'Зелье маны',price:25}]}
-};
+
+// Воплощение
+{id:'scroll_evocation_light',name:'Свиток: Свет',price:5},
+{id:'scroll_evocation_push',name:'Свиток: Толчок',price:10},
+{id:'scroll_evocation_stonefist',name:'Свиток: Каменный кулак',price:12},
+{id:'scroll_evocation_acid_splash',name:'Свиток: Кислотный всплеск',price:15},
+{id:'scroll_evocation_ice',name:'Свиток: Ледышка',price:18},
+{id:'scroll_evocation_spark',name:'Свиток: Разряд',price:18},
+{id:'scroll_evocation_flash',name:'Свиток: Вспышка',price:20},
+{id:'scroll_evocation_chain',name:'Свиток: Цепная молния',price:25},
+{id:'scroll_evocation_acid_arrow',name:'Свиток: Кислотная стрела',price:27},
+{id:'scroll_evocation_beam',name:'Свиток: Луч',price:30},
+{id:'scroll_evocation_burn',name:'Свиток: Поджиг',price:32},
+{id:'scroll_evocation_fireball',name:'Свиток: Огненный шар',price:40},
+{id:'scroll_evocation_noise',name:'Свиток: Шум',price:40},
+{id:'scroll_evocation_freeze',name:'Свиток: Заморозка',price:50},
+
+// Некромантия
+{id:'scroll_necro_weakness',name:'Свиток: Проклятье слабости',price:15},
+{id:'scroll_necro_wither',name:'Свиток: Усыхание',price:18},
+{id:'scroll_necro_mark',name:'Свиток: Метка',price:18},
+{id:'scroll_necro_grave_cold',name:'Свиток: Могильный холод',price:18},
+{id:'scroll_necro_wound',name:'Свиток: Рана',price:20},
+{id:'scroll_necro_death_fear',name:'Свиток: Страх смерти',price:22},
+{id:'scroll_necro_life_drain',name:'Свиток: Вытягивание жизни',price:25},
+{id:'scroll_necro_false_life',name:'Свиток: Ложная жизнь',price:25},
+{id:'scroll_necro_exchange',name:'Свиток: Обмен',price:25},
+{id:'scroll_necro_raise_dead',name:'Свиток: Воскрешение мёртвого',price:35},
+{id:'scroll_necro_undeath',name:'Свиток: Нежизнь',price:45},
+
+// Трансмутация
+{id:'scroll_trans_cat_grace',name:'Свиток: Кошачья грация',price:10},
+{id:'scroll_trans_bull',name:'Свиток: Бычья выносливость',price:10},
+{id:'scroll_trans_cat_eyes',name:'Свиток: Глаза кошки',price:12},
+{id:'scroll_trans_gills',name:'Свиток: Жабры',price:12},
+{id:'scroll_trans_fog',name:'Свиток: Туман',price:15},
+{id:'scroll_trans_haste',name:'Свиток: Ускорение',price:20},
+{id:'scroll_trans_stone_skin',name:'Свиток: Каменная кожа',price:22},
+{id:'scroll_trans_corrosion',name:'Свиток: Коррозия',price:25},
+{id:'scroll_trans_shapeshift',name:'Свиток: Перевёртыш',price:25},
+{id:'scroll_trans_enlarge',name:'Свиток: Увеличение',price:30},
+{id:'scroll_trans_reduce',name:'Свиток: Уменьшение',price:30},
+{id:'scroll_trans_claws',name:'Свиток: Когти',price:32},
+{id:'scroll_trans_polymorph',name:'Свиток: Полиморф',price:40},
+{id:'scroll_trans_transfig',name:'Свиток: Трансфигурация',price:45},
+
+// Очарование
+{id:'scroll_ench_heroism',name:'Свиток: Героизм',price:12},
+{id:'scroll_ench_friendship',name:'Свиток: Дружба',price:20},
+{id:'scroll_ench_command',name:'Свиток: Повеление',price:25},
+{id:'scroll_ench_hysteria',name:'Свиток: Истерика',price:30},
+{id:'scroll_ench_provoke',name:'Свиток: Провокация',price:35},
+{id:'scroll_ench_color_spray',name:'Свиток: Цветные брызги',price:40},
+{id:'scroll_ench_fear',name:'Свиток: Страх',price:45},
+{id:'scroll_ench_sleep',name:'Свиток: Сон',price:50},
+
+// Ограждение
+{id:'scroll_abj_lock',name:'Свиток: Замок',price:8},
+{id:'scroll_abj_shield',name:'Свиток: Щит',price:15},
+{id:'scroll_abj_elem_shield_earth',name:'Свиток: Стихийный щит: Земля',price:20},
+{id:'scroll_abj_elem_shield_fire',name:'Свиток: Стихийный щит: Огонь',price:20},
+{id:'scroll_abj_elem_shield_acid',name:'Свиток: Стихийный щит: Кислота',price:20},
+{id:'scroll_abj_elem_shield_lightning',name:'Свиток: Стихийный щит: Молния',price:20},
+{id:'scroll_abj_elem_shield_ice',name:'Свиток: Стихийный щит: Лёд',price:20},
+{id:'scroll_abj_ward',name:'Свиток: Оберег',price:25},
+{id:'scroll_abj_wall',name:'Свиток: Стена',price:40},
+
+// Созидание
+{id:'scroll_conj_heal',name:'Свиток: Лечение',price:15},
+{id:'scroll_conj_repair',name:'Свиток: Ремонт',price:15},
+{id:'scroll_conj_summon',name:'Свиток: Призыв',price:30},
+{id:'scroll_conj_swarm',name:'Свиток: Призыв стаи',price:40},
+{id:'scroll_conj_elem_fire',name:'Свиток: Призыв элементаля: Огонь',price:45},
+{id:'scroll_conj_elem_lightning',name:'Свиток: Призыв элементаля: Молния',price:45},
+{id:'scroll_conj_elem_water',name:'Свиток: Призыв элементаля: Вода',price:45},
+{id:'scroll_conj_elem_earth',name:'Свиток: Призыв элементаля: Земля',price:45},
+{id:'scroll_conj_elem_air',name:'Свиток: Призыв элементаля: Воздух',price:45},
+
+// Иллюзия
+{id:'scroll_ill_minor_image',name:'Свиток: Малый образ',price:9},
+{id:'scroll_ill_silent_image',name:'Свиток: Безмолвный образ',price:15},
+{id:'scroll_ill_disguise',name:'Свиток: Маскировка',price:20},
+{id:'scroll_ill_invisibility',name:'Свиток: Невидимость',price:25},
+{id:'scroll_ill_huge_image',name:'Свиток: Огромный образ',price:20},
+{id:'scroll_ill_decoy',name:'Свиток: Обманка',price:45},
+{id:'scroll_ill_mirror',name:'Свиток: Зеркало',price:40},
+
+// Прорицание
+{id:'scroll_div_detect_magic',name:'Свиток: Обнаружение магии',price:10},
+{id:'scroll_div_read',name:'Свиток: Чтение',price:15},
+{id:'scroll_div_find_item',name:'Свиток: Поиск предмета',price:30},
+{id:'scroll_div_prescience',name:'Свиток: Предчувствие',price:30},
+{id:'scroll_div_see_invisible',name:'Свиток: Увидеть невидимое',price:17},
+{id:'scroll_div_true_sight',name:'Свиток: Истинное зрение',price:25},
+{id:'scroll_div_find_creature',name:'Свиток: Поиск существа',price:35},
+
+{id:'mana_elixir_base',name:'Зелье маны',price:25}]};
 let state={name:'',gender:'',race:'human',subrace:'',class:'fighter',god:'',priority:'A',
 attrs:{SIL:1,TEL:1,LVK:1,INT:1,MDR:1,HAR:1},skills:{},spells:{},cart:[],gear:'',
 magusSchools:[],domainChoices:{},rangerChoice:'',rangerType:'',beast:'',
