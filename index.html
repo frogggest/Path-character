@@ -4,84 +4,345 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Чарлист — Pathfinder d6</title>
+<link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=EB+Garamond:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
-body{font-family:system-ui,-apple-system,sans-serif;background:#1a1a1a;color:#e0e0e0;margin:0;padding:16px;line-height:1.4}
-.app{max-width:1100px;margin:0 auto}
-h1{color:#d4a95a;border-bottom:2px solid #d4a95a;padding-bottom:8px;margin-top:0}
-h2{color:#d4a95a;margin-top:20px;border-bottom:1px solid #333;padding-bottom:4px;font-size:18px}
-h3{color:#b0b0b0;margin:10px 0 6px;font-size:14px}
-h4{color:#888;margin:8px 0 4px;font-size:12px;text-transform:uppercase;letter-spacing:1px}
-section{background:#242424;padding:14px;margin-bottom:14px;border-radius:8px;border:1px solid #333}
-label{display:inline-block;margin:4px 10px 4px 0;font-size:14px}
-input[type=text],input[type=number],select,textarea{background:#1a1a1a;color:#e0e0e0;border:1px solid #444;padding:6px 10px;border-radius:4px;font-size:14px;font-family:inherit}
+
+:root{
+  --parchment:#f0e2c0;
+  --parchment-dark:#e3d2a8;
+  --ink:#3a2a15;
+  --ink-soft:#6a553a;
+  --wood:#5a3a1e;
+  --wood-dark:#3a2410;
+  --brass:#b08d3e;
+  --brass-light:#d4b56a;
+  --brass-dark:#7a5f24;
+}
+
+body{
+  font-family:'EB Garamond',Georgia,serif;
+  color:var(--ink);
+  margin:0;
+  padding:24px 16px;
+  line-height:1.5;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(255,255,255,.08),transparent 40%),
+    radial-gradient(circle at 80% 90%,rgba(0,0,0,.35),transparent 40%),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 2px,transparent 2px 6px),
+    var(--wood-dark);
+  background-attachment:fixed;
+}
+
+.app{
+  max-width:1100px;
+  margin:0 auto;
+  padding:26px 22px;
+  background:
+    repeating-linear-gradient(0deg,rgba(90,58,30,.025) 0 1px,transparent 1px 3px),
+    repeating-linear-gradient(90deg,rgba(90,58,30,.025) 0 1px,transparent 1px 3px),
+    radial-gradient(circle at 15% 20%,rgba(255,255,255,.5),transparent 60%),
+    radial-gradient(circle at 85% 80%,rgba(160,120,60,.18),transparent 60%),
+    var(--parchment);
+  border:6px solid var(--wood);
+  border-radius:4px;
+  box-shadow:
+    0 0 0 2px var(--brass-dark),
+    0 0 0 4px var(--brass),
+    0 0 0 6px var(--brass-light),
+    0 0 0 7px var(--brass-dark),
+    0 14px 44px rgba(0,0,0,.65);
+  position:relative;
+}
+
+.app::before,.app::after{
+  content:'';position:absolute;width:34px;height:34px;pointer-events:none;
+  background:radial-gradient(circle at 30% 30%,var(--brass-light),var(--brass) 55%,var(--brass-dark) 90%);
+  border-radius:50%;
+  box-shadow:inset 0 -2px 4px rgba(0,0,0,.45),inset 0 2px 2px rgba(255,255,255,.4),0 2px 5px rgba(0,0,0,.5);
+}
+.app::before{top:-20px;left:-20px}
+.app::after{bottom:-20px;right:-20px}
+
+h1{
+  font-family:'IM Fell English SC',serif;
+  color:var(--ink);
+  text-align:center;
+  letter-spacing:2px;
+  border-bottom:2px solid var(--brass);
+  padding-bottom:12px;
+  margin-top:0;
+  text-shadow:1px 1px 0 rgba(255,255,255,.5);
+}
+h2{
+  font-family:'IM Fell English SC',serif;
+  color:var(--ink);
+  border-bottom:1px solid var(--brass);
+  padding-bottom:4px;
+  font-size:20px;
+  letter-spacing:1px;
+  margin-top:22px;
+}
+h3{color:var(--ink-soft);font-family:'IM Fell English SC',serif;letter-spacing:.5px;margin:12px 0 6px}
+h4{color:var(--ink-soft);font-size:12px;text-transform:uppercase;letter-spacing:2px;margin:10px 0 4px}
+
+section{
+  background:transparent;
+  padding:12px 2px;
+  margin-bottom:14px;
+  border-top:1px solid rgba(122,95,36,.35);
+  border-radius:0;
+}
+section:first-of-type{border-top:none}
+
+label{display:inline-block;margin:4px 10px 4px 0;font-size:15px;color:var(--ink)}
+
+input[type=text],input[type=number],select,textarea{
+  background:rgba(255,252,240,.5);
+  color:var(--ink);
+  border:1px solid var(--brass-dark);
+  border-radius:2px;
+  padding:6px 10px;
+  font-family:'EB Garamond',Georgia,serif;
+  font-size:15px;
+  box-shadow:inset 1px 1px 2px rgba(90,58,30,.18);
+}
 input[type=number]{width:60px;text-align:center}
 select{min-width:150px}
+input:focus,select:focus,textarea:focus{
+  outline:none;
+  border-color:var(--brass);
+  box-shadow:inset 1px 1px 2px rgba(90,58,30,.18),0 0 0 2px rgba(212,181,106,.45);
+}
+
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.counter{color:#888;font-weight:normal;font-size:13px;margin-left:6px}
-.counter.over{color:#e05a5a;font-weight:bold}
-.counter.ok{color:#5ae05a}
+
+.counter{color:var(--ink-soft);font-weight:normal;font-size:13px;margin-left:6px}
+.counter.over{color:#8a1a10;font-weight:bold}
+.counter.ok{color:#3a6a1a;font-weight:bold}
+
 .attr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
-.attr-item{background:#1a1a1a;padding:8px;border-radius:6px;border:1px solid #333}
-.attr-item label{display:block;margin:0 0 4px;color:#d4a95a;font-weight:bold;font-size:13px}
-.attr-item .max{font-size:11px;color:#666;margin-left:4px;font-weight:normal}
+.attr-item{
+  background:rgba(255,252,240,.35);
+  padding:9px;
+  border-radius:3px;
+  border:1px solid var(--brass-dark);
+  box-shadow:inset 0 0 10px rgba(90,58,30,.12);
+}
+.attr-item label{display:block;margin:0 0 4px;color:var(--ink);font-family:'IM Fell English SC',serif;font-weight:normal;font-size:14px}
+.attr-item .max{font-size:11px;color:var(--ink-soft);margin-left:4px;font-weight:normal;font-style:italic}
+
 .skill-group{margin:10px 0}
-.skill-item{display:grid;grid-template-columns:1fr 55px 100px;gap:8px;padding:5px 0;border-bottom:1px solid #2a2a2a;align-items:center;font-size:13px}
+.skill-item{display:grid;grid-template-columns:1fr 55px 100px;gap:8px;padding:5px 0;border-bottom:1px dashed rgba(122,95,36,.35);align-items:center;font-size:14px}
 .skill-item:last-child{border-bottom:none}
-.skill-name{color:#ccc}
-.skill-attr{color:#666;font-size:11px}
-.skill-total{color:#d4a95a;font-weight:bold;font-size:12px;text-align:right}
+.skill-name{color:var(--ink)}
+.skill-attr{color:var(--ink-soft);font-size:11px;font-style:italic}
+.skill-total{color:var(--brass-dark);font-weight:bold;font-size:13px;text-align:right}
+
 .spell-group{margin:10px 0}
 .spell-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:2px}
-.spell-item{display:flex;align-items:flex-start;gap:6px;padding:3px 4px;font-size:12px}
-.spell-item label{display:flex;align-items:center;gap:6px;cursor:pointer;flex:1}
-.spell-enh{display:flex;align-items:center;gap:4px;font-size:11px;color:#888;margin-left:auto}
-.spell-enh button{padding:1px 5px;font-size:10px;background:#333;color:#d4a95a}
-.spell-enh button:hover{background:#444}
+.spell-item{display:flex;align-items:flex-start;gap:6px;padding:3px 4px;font-size:13px}
+.spell-item label{display:flex;align-items:center;gap:6px;cursor:pointer;flex:1;margin:0}
+.spell-enh{display:flex;align-items:center;gap:4px;font-size:11px;color:var(--ink-soft);margin-left:auto}
+.spell-enh button{padding:1px 6px;font-size:10px;background:var(--brass-dark);color:var(--parchment);margin:0}
+.spell-enh button:hover{background:var(--brass)}
+
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
-.stat-box{background:#1a1a1a;padding:10px;border-radius:6px;border:1px solid #333;text-align:center}
-.stat-box .label{color:#888;font-size:11px}
-.stat-box .value{color:#d4a95a;font-size:24px;font-weight:bold;margin-top:2px}
-button{background:#d4a95a;color:#1a1a1a;border:none;padding:6px 12px;border-radius:4px;cursor:pointer;font-weight:bold;margin-right:6px;font-size:13px}
-button:hover{background:#e0b96a}
-button:disabled{background:#444;color:#666;cursor:not-allowed}
-button.danger{background:#a04040;color:#fff}
-button.small{padding:3px 8px;font-size:11px}
-.toolbar{margin-bottom:12px;display:flex;gap:6px;flex-wrap:wrap}
-.ability{background:#1a1a1a;padding:8px 12px;border-left:3px solid #d4a95a;margin-top:6px;font-size:12px;color:#b0b0b0;border-radius:4px}
-.hint{color:#666;font-size:11px;margin-top:4px}
+.stat-box{
+  background:rgba(255,252,240,.35);
+  padding:10px;
+  border-radius:3px;
+  border:1px solid var(--brass-dark);
+  text-align:center;
+  box-shadow:inset 0 0 10px rgba(90,58,30,.12);
+}
+.stat-box .label{color:var(--ink-soft);font-size:11px;letter-spacing:1px;text-transform:uppercase}
+.stat-box .value{color:var(--brass-dark);font-size:26px;font-weight:bold;margin-top:2px;font-family:'IM Fell English SC',serif}
+
+button{
+  font-family:'IM Fell English SC',serif;
+  letter-spacing:1px;
+  background:linear-gradient(180deg,var(--brass-light),var(--brass) 60%,var(--brass-dark));
+  color:#2a1e08;
+  border:1px solid var(--brass-dark);
+  border-radius:3px;
+  padding:6px 14px;
+  cursor:pointer;
+  font-weight:600;
+  font-size:14px;
+  margin-right:6px;
+  box-shadow:0 2px 0 var(--brass-dark),0 3px 6px rgba(0,0,0,.28);
+  text-shadow:0 1px 0 rgba(255,255,255,.35);
+  transition:transform .05s,box-shadow .05s;
+}
+button:hover{background:linear-gradient(180deg,#e5cb8b,var(--brass-light) 60%,var(--brass))}
+button:active{transform:translateY(2px);box-shadow:0 0 0 var(--brass-dark),0 1px 2px rgba(0,0,0,.3)}
+button:disabled{background:#b5a684;color:#7a6a4a;box-shadow:none;cursor:not-allowed;text-shadow:none}
+button.danger{background:linear-gradient(180deg,#b04a3a,#7a2a1e);color:var(--parchment);border-color:#4a1a10;text-shadow:0 1px 0 rgba(0,0,0,.4)}
+button.danger:hover{background:linear-gradient(180deg,#c05a4a,#8a3a2e)}
+button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
+
+.toolbar{margin-bottom:14px;display:flex;gap:6px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid rgba(122,95,36,.35)}
+
+.ability{
+  background:rgba(255,252,240,.4);
+  padding:9px 14px;
+  border-left:3px solid var(--brass);
+  margin-top:6px;
+  font-size:13px;
+  color:var(--ink);
+  border-radius:0 3px 3px 0;
+  font-style:italic;
+}
+.hint{color:var(--ink-soft);font-size:12px;margin-top:4px;font-style:italic}
+
 .radio-group{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:2px;margin:6px 0}
-.radio-item{font-size:12px;padding:3px 4px;cursor:pointer}
-.chip{display:inline-block;padding:3px 8px;background:#333;border-radius:12px;font-size:12px;margin:2px;color:#aaa}
-.chip.active{background:#d4a95a;color:#1a1a1a;font-weight:bold}
-.shop-cat{margin:10px 0;border:1px solid #333;border-radius:6px;overflow:hidden}
-.shop-cat summary{padding:8px 12px;cursor:pointer;background:#2a2a2a;font-weight:bold;color:#d4a95a;font-size:13px;list-style:none}
+.radio-item{font-size:13px;padding:3px 4px;cursor:pointer;color:var(--ink)}
+
+.chip{
+  display:inline-block;padding:3px 10px;
+  background:rgba(176,141,62,.2);
+  border:1px solid var(--brass-dark);
+  border-radius:3px;
+  font-size:12px;margin:2px;color:var(--ink);
+  font-family:'IM Fell English SC',serif;letter-spacing:.5px;
+}
+.chip.active{
+  background:linear-gradient(180deg,var(--brass-light),var(--brass));
+  color:#2a1e08;font-weight:bold;
+  box-shadow:0 1px 0 var(--brass-dark);
+}
+
+.shop-cat{
+  margin:10px 0;
+  border:1px solid var(--brass-dark);
+  border-radius:3px;
+  overflow:hidden;
+  background:rgba(255,252,240,.25);
+}
+.shop-cat summary{
+  padding:8px 14px;cursor:pointer;
+  background:linear-gradient(180deg,rgba(176,141,62,.4),rgba(176,141,62,.15));
+  font-family:'IM Fell English SC',serif;
+  color:var(--ink);
+  font-size:14px;letter-spacing:1px;
+  list-style:none;
+}
 .shop-cat summary::-webkit-details-marker{display:none}
-.shop-item{display:grid;grid-template-columns:1fr 60px 80px;gap:8px;padding:6px 12px;border-top:1px solid #2a2a2a;align-items:center;font-size:12px}
-.shop-item .price{color:#d4a95a;font-weight:bold;text-align:right}
-.shop-item .restricted{color:#666;font-style:italic;font-size:11px}
-.cart-item{padding:8px 0;border-bottom:1px solid #2a2a2a;font-size:12px}
+.shop-item{
+  display:grid;grid-template-columns:1fr 60px 80px;
+  gap:8px;padding:6px 14px;
+  border-top:1px solid rgba(122,95,36,.25);
+  align-items:center;font-size:13px;
+}
+.shop-item .price{color:var(--brass-dark);font-weight:bold;text-align:right}
+.shop-item .restricted{color:var(--ink-soft);font-style:italic;font-size:11px}
+
+.cart-item{padding:8px 0;border-bottom:1px dashed rgba(122,95,36,.4);font-size:13px}
 .cart-item:last-child{border-bottom:none}
 .cart-row{display:grid;grid-template-columns:1fr 70px 30px;gap:8px;align-items:center}
-.cart-row .price{color:#d4a95a;font-weight:bold;text-align:right}
-.cart-upgrades{margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px;color:#888}
-.cart-upgrades button{padding:2px 6px;font-size:10px;background:#333;color:#d4a95a;margin:0}
-.cart-upgrades button:hover{background:#444}
-.cart-upgrades button:disabled{background:#222;color:#555}
-.upg-tag{color:#5ae05a}
+.cart-row .price{color:var(--brass-dark);font-weight:bold;text-align:right}
+.cart-upgrades{margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--ink-soft)}
+.cart-upgrades button{padding:2px 7px;font-size:10px;background:var(--brass-dark);color:var(--parchment);margin:0}
+.cart-upgrades button:hover{background:var(--brass)}
+.cart-upgrades button:disabled{background:#9a8a6a;color:#5a4a2a}
+
+.upg-tag{color:#3a6a1a;font-weight:bold}
+
 .hidden{display:none}
-.pool-banner{background:#2a2a2a;border-left:3px solid #d4a95a;padding:8px 12px;border-radius:4px;font-size:13px;margin-bottom:8px}
-.pool-banner b{color:#d4a95a}
-.line{padding:4px 0;font-size:13px;color:#ccc}
-.line b{color:#d4a95a}
-.calc-block{background:#1a1a1a;padding:10px 14px;border-radius:6px;border:1px solid #333;margin-bottom:10px}
-.calc-block .total{border-top:1px solid #444;padding-top:6px;margin-top:6px;font-size:14px}
-.xp-skill-row{display:grid;grid-template-columns:1fr 100px 90px;gap:8px;padding:6px 0;border-bottom:1px solid #2a2a2a;align-items:center;font-size:13px}
+
+.pool-banner{
+  background:rgba(255,252,240,.4);
+  border-left:3px solid var(--brass);
+  padding:8px 14px;border-radius:0 3px 3px 0;
+  font-size:13px;margin-bottom:8px;
+}
+.pool-banner b{color:var(--brass-dark)}
+
+.line{padding:4px 0;font-size:14px;color:var(--ink)}
+.line b{color:var(--brass-dark)}
+.calc-block{
+  background:rgba(255,252,240,.3);
+  padding:10px 14px;
+  border-radius:3px;
+  border:1px solid var(--brass-dark);
+  margin-bottom:10px;
+  box-shadow:inset 0 0 10px rgba(90,58,30,.1);
+}
+.calc-block .total{border-top:1px solid rgba(122,95,36,.5);padding-top:6px;margin-top:6px;font-size:15px}
+
+.xp-skill-row{display:grid;grid-template-columns:1fr 100px 90px;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(122,95,36,.35);align-items:center;font-size:14px}
 .xp-skill-row:last-child{border-bottom:none}
-.xp-counter{font-size:16px;font-weight:bold;color:#d4a95a;padding:10px;background:#1a1a1a;border-radius:6px;border:1px solid #333;margin-bottom:10px}
-.xp-counter span{color:#888;font-weight:normal;font-size:13px;margin:0 8px}
-.xp-log div{padding:3px 0;font-size:12px;color:#aaa;border-bottom:1px solid #2a2a2a}
-.xp-purchased div{padding:3px 0;font-size:12px;color:#d4a95a}
+.xp-counter{
+  font-size:17px;font-weight:bold;color:var(--brass-dark);
+  padding:10px;background:rgba(255,252,240,.4);
+  border-radius:3px;border:1px solid var(--brass-dark);
+  margin-bottom:10px;font-family:'IM Fell English SC',serif;
+}
+.xp-counter span{color:var(--ink-soft);font-weight:normal;font-size:13px;margin:0 8px}
+.xp-log div{padding:3px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px dashed rgba(122,95,36,.3)}
+.xp-purchased div{padding:3px 0;font-size:13px;color:var(--brass-dark)}
+/* Блокнот */
+.notepad-tabs{
+  display:flex;
+  flex-wrap:wrap;
+  gap:4px;
+  margin:8px 0 10px;
+  padding-bottom:8px;
+  border-bottom:1px solid rgba(122,95,36,.35);
+}
+.notepad-tab{
+  font-family:'IM Fell English SC',serif;
+  letter-spacing:.5px;
+  background:rgba(255,252,240,.4);
+  color:var(--ink-soft);
+  border:1px solid var(--brass-dark);
+  border-radius:3px 3px 0 0;
+  padding:5px 12px;
+  margin:0;
+  font-size:13px;
+  font-weight:normal;
+  cursor:pointer;
+  box-shadow:none;
+  text-shadow:none;
+  transition:background .1s;
+}
+.notepad-tab:hover{
+  background:rgba(212,181,106,.35);
+  color:var(--ink);
+}
+.notepad-tab.active{
+  background:linear-gradient(180deg,var(--brass-light),var(--brass));
+  color:#2a1e08;
+  font-weight:bold;
+  box-shadow:inset 0 -2px 0 rgba(0,0,0,.15);
+  border-bottom-color:transparent;
+}
+
+#notepad{
+  width:100%;
+  min-height:220px;
+  resize:vertical;
+  font-family:'EB Garamond',Georgia,serif;
+  font-size:16px;
+  line-height:1.6;
+  color:var(--ink);
+  background:
+    repeating-linear-gradient(0deg,transparent 0 29px,rgba(122,95,36,.18) 29px 30px),
+    rgba(255,252,240,.35);
+  background-attachment:local;
+  border:1px solid var(--brass-dark);
+  border-radius:3px;
+  padding:6px 14px;
+  box-shadow:inset 0 0 12px rgba(90,58,30,.15);
+  box-sizing:border-box;
+}
+#notepad:focus{
+  outline:none;
+  border-color:var(--brass);
+  box-shadow:inset 0 0 12px rgba(90,58,30,.15),0 0 0 2px rgba(212,181,106,.45);
+}
+::selection{background:rgba(212,181,106,.6);color:var(--ink)}
 </style>
 </head>
 <body>
@@ -156,6 +417,15 @@ button.small{padding:3px 8px;font-size:11px}
 <h3>Защита</h3><div class="calc-block" id="defense-block"></div>
 <h3>Магия</h3><div class="calc-block" id="magic-attacks-list"></div>
 <h3>Общее</h3><div class="stats-grid" id="stats"></div>
+</section>
+<section>
+<h2>Блокнот</h2>
+<div class="notepad-tabs" id="notepad-tabs">
+<button type="button" class="notepad-tab active" data-tab="bio" onclick="switchNotepadTab('bio')">📜 Предыстория</button>
+<button type="button" class="notepad-tab" data-tab="notes" onclick="switchNotepadTab('notes')">🗒️ Заметки</button>
+<button type="button" class="notepad-tab" data-tab="quests" onclick="switchNotepadTab('quests')">⚔️ Квесты</button>
+</div>
+<textarea id="notepad" rows="12" placeholder="Пиши здесь..."></textarea>
 </section>
 <section id="xp-section" class="hidden">
 <h2>Развитие персонажа</h2>
@@ -524,7 +794,8 @@ attrs:{SIL:1,TEL:1,LVK:1,INT:1,MDR:1,HAR:1},skills:{},spells:{},cart:[],gear:'',
 magusSchools:[],domainChoices:{},rangerChoice:'',rangerType:'',beast:'',
 druidOrder:'',wildForm:'',elementalForm:'',sorcererOrigin:'',potions:{},alchemyFire:0,
 xpEarned:0,xpSpent:0,sessionLog:[],purchasedSpells:[],xpOpen:false,
-spellEnhance:{},healPotionLevel:0,foodLevel:0,manaElixirLevel:0,shopOpen:{}};
+spellEnhance:{},healPotionLevel:0,foodLevel:0,manaElixirLevel:0,shopOpen:{},
+notepad:{bio:'',notes:'',quests:''}};
 function xpAvail(){return state.xpEarned-state.xpSpent;}
 function canUseMagic(){if(state.class==='cleric'||state.class==='paladin')return true;return state.priority==='B';}
 function initSelects(){
@@ -631,7 +902,7 @@ function updateGodWrap(){
   if(cls.hasGod) wrap.classList.remove('hidden');
   else wrap.classList.add('hidden');
 }
-function render(){updateGodWrap();renderAttrs();renderDomains();renderSpecial();renderSkills();renderAlchemy();renderSpells();renderBeasts();renderShop();renderCart();renderStats();renderRaceAbility();renderClassInfo();renderMoney();if(state.xpOpen)renderXP();}
+function render(){updateGodWrap();renderAttrs();renderDomains();renderSpecial();renderSkills();renderAlchemy();renderSpells();renderBeasts();renderShop();renderCart();renderStats();renderNotepad();renderRaceAbility();renderClassInfo();renderMoney();if(state.xpOpen)renderXP();}
 function renderAttrs(){
 const maxes=getMaxes();const grid=document.getElementById('attr-grid');grid.innerHTML='';
 for(const k in ATTRS){const max=maxes[k]||6;const v=state.attrs[k]||1;
@@ -927,6 +1198,7 @@ function changeLeveled(delta,type){
 }
 function toggleShopCat(catKey,isOpen){
   if(!state.shopOpen)state.shopOpen={};
+  if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
   if(isOpen)state.shopOpen[catKey]=true;
   else delete state.shopOpen[catKey];
 }
@@ -1053,6 +1325,28 @@ if(isArmorItem(c.cat)){
 function renderMoney(){const pool=PRIORITIES[state.priority].money;
 const spent=totalSpentMoney();const c=document.getElementById('money-counter');
 c.textContent=`${spent} / ${pool} монет`;c.className='counter '+(spent>pool?'over':spent===pool?'ok':'');}
+function renderNotepad(){
+  const el=document.getElementById('notepad');
+  if(!el)return;
+  if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
+  const tab=document.querySelector('.notepad-tab.active')?.dataset.tab||'bio';
+  el.value=state.notepad[tab]||'';
+  el.placeholder=({bio:'Опиши прошлое персонажа...',notes:'Любые заметки по игре...',quests:'Активные задачи и зацепки...'})[tab]||'';
+  document.querySelectorAll('.notepad-tab').forEach(b=>{
+    b.classList.toggle('active',b.dataset.tab===tab);
+  });
+}
+
+function switchNotepadTab(tab){
+  if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
+  const el=document.getElementById('notepad');
+  const currentTab=document.querySelector('.notepad-tab.active')?.dataset.tab||'bio';
+  state.notepad[currentTab]=el.value;
+  document.querySelectorAll('.notepad-tab').forEach(b=>{
+    b.classList.toggle('active',b.dataset.tab===tab);
+  });
+  renderNotepad();
+}
 function renderRaceAbility(){const r=RACES[state.race];
 document.getElementById('race-ability').innerHTML=`<b>Способность расы:</b> ${r.ability}`;}
 function renderClassInfo(){const c=CLASSES[state.class];let extra='';
@@ -1228,6 +1522,7 @@ if(state.healPotionLevel===undefined)state.healPotionLevel=0;
 if(state.foodLevel===undefined)state.foodLevel=0;
 if(state.manaElixirLevel===undefined)state.manaElixirLevel=0;
 if(!state.shopOpen)state.shopOpen={};
+if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
 if(state.cart){state.cart.forEach(c=>{if(c.sharp===undefined)c.sharp=0;if(c.reinf===undefined)c.reinf=0;if(c.twoHanded===undefined)c.twoHanded=false;});}
 applyState();render();}
 function reset(){if(!confirm('Сбросить?'))return;localStorage.removeItem('pf_char');location.reload();}
@@ -1246,6 +1541,11 @@ document.getElementById('class').addEventListener('change',()=>onClassChange());
 document.getElementById('god').addEventListener('change',e=>{state.god=e.target.value;if(state.class==='cleric')state.domainChoices={};render();});
 document.getElementById('priority').addEventListener('change',()=>{collect();validateMagicSelection();validateMagicAccess();render();});
 document.getElementById('gender').addEventListener('change',()=>{collect();});
+document.getElementById('notepad').addEventListener('input',e=>{
+  if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
+  const tab=document.querySelector('.notepad-tab.active')?.dataset.tab||'bio';
+  state.notepad[tab]=e.target.value;
+});
 applyState();
 render();
 </script>
