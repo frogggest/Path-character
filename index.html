@@ -9,15 +9,17 @@
 *{box-sizing:border-box}
 
 :root{
-  --parchment:#f0e2c0;
-  --parchment-dark:#e3d2a8;
-  --ink:#3a2a15;
-  --ink-soft:#6a553a;
-  --wood:#5a3a1e;
-  --wood-dark:#3a2410;
-  --brass:#b08d3e;
-  --brass-light:#d4b56a;
-  --brass-dark:#7a5f24;
+  --parchment:#d9c7a0;
+  --parchment-dark:#b8a279;
+  --parchment-light:#e8dab8;
+  --ink:#2a1c0c;
+  --ink-soft:#5a4530;
+  --wood:#3a2410;
+  --wood-dark:#1a1008;
+  --brass:#7a5a26;
+  --brass-light:#a88544;
+  --brass-dark:#3f2d10;
+  --brass-shadow:#1e1408;
 }
 
 body{
@@ -27,10 +29,11 @@ body{
   padding:24px 16px;
   line-height:1.5;
   background:
-    radial-gradient(circle at 20% 10%,rgba(255,255,255,.08),transparent 40%),
-    radial-gradient(circle at 80% 90%,rgba(0,0,0,.35),transparent 40%),
-    repeating-linear-gradient(90deg,rgba(0,0,0,.05) 0 2px,transparent 2px 6px),
-    var(--wood-dark);
+    radial-gradient(ellipse at 50% 30%,rgba(120,80,30,.18),transparent 60%),
+    radial-gradient(ellipse at 20% 90%,rgba(0,0,0,.5),transparent 50%),
+    radial-gradient(ellipse at 80% 10%,rgba(0,0,0,.4),transparent 50%),
+    repeating-linear-gradient(90deg,rgba(0,0,0,.15) 0 3px,transparent 3px 7px),
+    linear-gradient(180deg,#2a1a0c,#1a1008 60%,#0f0a04);
   background-attachment:fixed;
 }
 
@@ -39,45 +42,54 @@ body{
   margin:0 auto;
   padding:26px 22px;
   background:
-    repeating-linear-gradient(0deg,rgba(90,58,30,.025) 0 1px,transparent 1px 3px),
-    repeating-linear-gradient(90deg,rgba(90,58,30,.025) 0 1px,transparent 1px 3px),
-    radial-gradient(circle at 15% 20%,rgba(255,255,255,.5),transparent 60%),
-    radial-gradient(circle at 85% 80%,rgba(160,120,60,.18),transparent 60%),
-    var(--parchment);
-  border:6px solid var(--wood);
-  border-radius:4px;
+    radial-gradient(circle at 12% 8%,rgba(90,60,20,.22),transparent 22%),
+    radial-gradient(circle at 88% 14%,rgba(70,45,15,.18),transparent 18%),
+    radial-gradient(circle at 22% 92%,rgba(80,55,20,.2),transparent 24%),
+    radial-gradient(circle at 78% 78%,rgba(60,40,12,.16),transparent 20%),
+    radial-gradient(circle at 45% 40%,rgba(255,240,200,.35),transparent 55%),
+    radial-gradient(circle at 65% 88%,rgba(50,30,10,.15),transparent 30%),
+    repeating-linear-gradient(3deg,rgba(90,58,30,.04) 0 2px,transparent 2px 5px),
+    repeating-linear-gradient(87deg,rgba(90,58,30,.03) 0 1px,transparent 1px 4px),
+    linear-gradient(180deg,var(--parchment-light),var(--parchment) 45%,var(--parchment-dark));
+  border:5px solid var(--wood);
+  border-radius:3px;
   box-shadow:
-    0 0 0 2px var(--brass-dark),
-    0 0 0 4px var(--brass),
-    0 0 0 6px var(--brass-light),
-    0 0 0 7px var(--brass-dark),
-    0 14px 44px rgba(0,0,0,.65);
+    0 0 0 2px var(--brass-shadow),
+    0 0 0 4px var(--brass-dark),
+    0 0 0 6px var(--brass),
+    0 0 0 7px var(--brass-shadow),
+    inset 0 0 80px rgba(60,35,10,.35),
+    inset 0 0 30px rgba(30,18,5,.25),
+    0 16px 50px rgba(0,0,0,.75);
   position:relative;
 }
 
 .app::before,.app::after{
-  content:'';position:absolute;width:34px;height:34px;pointer-events:none;
-  background:radial-gradient(circle at 30% 30%,var(--brass-light),var(--brass) 55%,var(--brass-dark) 90%);
+  content:'';position:absolute;width:30px;height:30px;pointer-events:none;
+  background:radial-gradient(circle at 32% 28%,#c0a058,#7a5a26 50%,#3f2d10 85%,#1e1408);
   border-radius:50%;
-  box-shadow:inset 0 -2px 4px rgba(0,0,0,.45),inset 0 2px 2px rgba(255,255,255,.4),0 2px 5px rgba(0,0,0,.5);
+  box-shadow:
+    inset 0 -3px 5px rgba(0,0,0,.7),
+    inset 0 2px 3px rgba(200,160,80,.35),
+    0 2px 5px rgba(0,0,0,.7);
 }
-.app::before{top:-20px;left:-20px}
-.app::after{bottom:-20px;right:-20px}
+.app::before{top:-18px;left:-18px}
+.app::after{bottom:-18px;right:-18px}
 
 h1{
   font-family:'IM Fell English SC',serif;
   color:var(--ink);
   text-align:center;
   letter-spacing:2px;
-  border-bottom:2px solid var(--brass);
+  border-bottom:2px solid var(--brass-dark);
   padding-bottom:12px;
   margin-top:0;
-  text-shadow:1px 1px 0 rgba(255,255,255,.5);
+  text-shadow:0 1px 0 rgba(255,220,150,.35);
 }
 h2{
   font-family:'IM Fell English SC',serif;
   color:var(--ink);
-  border-bottom:1px solid var(--brass);
+  border-bottom:1px solid var(--brass-dark);
   padding-bottom:4px;
   font-size:20px;
   letter-spacing:1px;
@@ -90,7 +102,7 @@ section{
   background:transparent;
   padding:12px 2px;
   margin-bottom:14px;
-  border-top:1px solid rgba(122,95,36,.35);
+  border-top:1px solid rgba(63,45,16,.4);
   border-radius:0;
 }
 section:first-of-type{border-top:none}
@@ -98,42 +110,42 @@ section:first-of-type{border-top:none}
 label{display:inline-block;margin:4px 10px 4px 0;font-size:15px;color:var(--ink)}
 
 input[type=text],input[type=number],select,textarea{
-  background:rgba(255,252,240,.5);
+  background:rgba(232,218,184,.55);
   color:var(--ink);
   border:1px solid var(--brass-dark);
   border-radius:2px;
   padding:6px 10px;
   font-family:'EB Garamond',Georgia,serif;
   font-size:15px;
-  box-shadow:inset 1px 1px 2px rgba(90,58,30,.18);
+  box-shadow:inset 1px 1px 2px rgba(60,35,10,.25);
 }
 input[type=number]{width:60px;text-align:center}
 select{min-width:150px}
 input:focus,select:focus,textarea:focus{
   outline:none;
   border-color:var(--brass);
-  box-shadow:inset 1px 1px 2px rgba(90,58,30,.18),0 0 0 2px rgba(212,181,106,.45);
+  box-shadow:inset 1px 1px 2px rgba(60,35,10,.25),0 0 0 2px rgba(168,133,68,.45);
 }
 
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 
 .counter{color:var(--ink-soft);font-weight:normal;font-size:13px;margin-left:6px}
-.counter.over{color:#8a1a10;font-weight:bold}
-.counter.ok{color:#3a6a1a;font-weight:bold}
+.counter.over{color:#7a1810;font-weight:bold}
+.counter.ok{color:#3a5a18;font-weight:bold}
 
 .attr-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px}
 .attr-item{
-  background:rgba(255,252,240,.35);
+  background:rgba(232,218,184,.45);
   padding:9px;
   border-radius:3px;
   border:1px solid var(--brass-dark);
-  box-shadow:inset 0 0 10px rgba(90,58,30,.12);
+  box-shadow:inset 0 0 10px rgba(60,35,10,.2);
 }
 .attr-item label{display:block;margin:0 0 4px;color:var(--ink);font-family:'IM Fell English SC',serif;font-weight:normal;font-size:14px}
 .attr-item .max{font-size:11px;color:var(--ink-soft);margin-left:4px;font-weight:normal;font-style:italic}
 
 .skill-group{margin:10px 0}
-.skill-item{display:grid;grid-template-columns:1fr 55px 100px;gap:8px;padding:5px 0;border-bottom:1px dashed rgba(122,95,36,.35);align-items:center;font-size:14px}
+.skill-item{display:grid;grid-template-columns:1fr 55px 100px;gap:8px;padding:5px 0;border-bottom:1px dashed rgba(63,45,16,.4);align-items:center;font-size:14px}
 .skill-item:last-child{border-bottom:none}
 .skill-name{color:var(--ink)}
 .skill-attr{color:var(--ink-soft);font-size:11px;font-style:italic}
@@ -149,12 +161,12 @@ input:focus,select:focus,textarea:focus{
 
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px}
 .stat-box{
-  background:rgba(255,252,240,.35);
+  background:rgba(232,218,184,.45);
   padding:10px;
   border-radius:3px;
   border:1px solid var(--brass-dark);
   text-align:center;
-  box-shadow:inset 0 0 10px rgba(90,58,30,.12);
+  box-shadow:inset 0 0 10px rgba(60,35,10,.2);
 }
 .stat-box .label{color:var(--ink-soft);font-size:11px;letter-spacing:1px;text-transform:uppercase}
 .stat-box .value{color:var(--brass-dark);font-size:26px;font-weight:bold;margin-top:2px;font-family:'IM Fell English SC',serif}
@@ -162,30 +174,33 @@ input:focus,select:focus,textarea:focus{
 button{
   font-family:'IM Fell English SC',serif;
   letter-spacing:1px;
-  background:linear-gradient(180deg,var(--brass-light),var(--brass) 60%,var(--brass-dark));
-  color:#2a1e08;
-  border:1px solid var(--brass-dark);
+  background:linear-gradient(180deg,var(--brass-light),var(--brass) 55%,var(--brass-dark));
+  color:#1a1004;
+  border:1px solid var(--brass-shadow);
   border-radius:3px;
   padding:6px 14px;
   cursor:pointer;
   font-weight:600;
   font-size:14px;
   margin-right:6px;
-  box-shadow:0 2px 0 var(--brass-dark),0 3px 6px rgba(0,0,0,.28);
-  text-shadow:0 1px 0 rgba(255,255,255,.35);
-  transition:transform .05s,box-shadow .05s;
+  box-shadow:
+    inset 0 1px 0 rgba(255,220,150,.3),
+    0 2px 0 var(--brass-shadow),
+    0 4px 8px rgba(0,0,0,.5);
+  text-shadow:0 1px 0 rgba(255,220,150,.3);
+  transition:transform .05s,box-shadow .05s,background .1s;
 }
-button:hover{background:linear-gradient(180deg,#e5cb8b,var(--brass-light) 60%,var(--brass))}
-button:active{transform:translateY(2px);box-shadow:0 0 0 var(--brass-dark),0 1px 2px rgba(0,0,0,.3)}
-button:disabled{background:#b5a684;color:#7a6a4a;box-shadow:none;cursor:not-allowed;text-shadow:none}
-button.danger{background:linear-gradient(180deg,#b04a3a,#7a2a1e);color:var(--parchment);border-color:#4a1a10;text-shadow:0 1px 0 rgba(0,0,0,.4)}
-button.danger:hover{background:linear-gradient(180deg,#c05a4a,#8a3a2e)}
+button:hover{background:linear-gradient(180deg,#b89a55,var(--brass-light) 55%,var(--brass))}
+button:active{transform:translateY(2px);box-shadow:inset 0 1px 0 rgba(255,220,150,.3),0 0 0 var(--brass-shadow),0 1px 2px rgba(0,0,0,.5)}
+button:disabled{background:#6a5a3a;color:#3a2e18;box-shadow:none;cursor:not-allowed;text-shadow:none}
+button.danger{background:linear-gradient(180deg,#8a3020,#5a1a10);color:var(--parchment);border-color:#2a0a04;text-shadow:0 1px 0 rgba(0,0,0,.5)}
+button.danger:hover{background:linear-gradient(180deg,#a04030,#6a2a1a)}
 button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
 
-.toolbar{margin-bottom:14px;display:flex;gap:6px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid rgba(122,95,36,.35)}
+.toolbar{margin-bottom:14px;display:flex;gap:6px;flex-wrap:wrap;padding-bottom:12px;border-bottom:1px solid rgba(63,45,16,.4)}
 
 .ability{
-  background:rgba(255,252,240,.4);
+  background:rgba(232,218,184,.5);
   padding:9px 14px;
   border-left:3px solid var(--brass);
   margin-top:6px;
@@ -201,7 +216,7 @@ button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
 
 .chip{
   display:inline-block;padding:3px 10px;
-  background:rgba(176,141,62,.2);
+  background:rgba(122,90,38,.25);
   border:1px solid var(--brass-dark);
   border-radius:3px;
   font-size:12px;margin:2px;color:var(--ink);
@@ -209,7 +224,7 @@ button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
 }
 .chip.active{
   background:linear-gradient(180deg,var(--brass-light),var(--brass));
-  color:#2a1e08;font-weight:bold;
+  color:#1a1004;font-weight:bold;
   box-shadow:0 1px 0 var(--brass-dark);
 }
 
@@ -218,11 +233,11 @@ button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
   border:1px solid var(--brass-dark);
   border-radius:3px;
   overflow:hidden;
-  background:rgba(255,252,240,.25);
+  background:rgba(232,218,184,.3);
 }
 .shop-cat summary{
   padding:8px 14px;cursor:pointer;
-  background:linear-gradient(180deg,rgba(176,141,62,.4),rgba(176,141,62,.15));
+  background:linear-gradient(180deg,rgba(122,90,38,.5),rgba(122,90,38,.2));
   font-family:'IM Fell English SC',serif;
   color:var(--ink);
   font-size:14px;letter-spacing:1px;
@@ -232,27 +247,27 @@ button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
 .shop-item{
   display:grid;grid-template-columns:1fr 60px 80px;
   gap:8px;padding:6px 14px;
-  border-top:1px solid rgba(122,95,36,.25);
+  border-top:1px solid rgba(63,45,16,.3);
   align-items:center;font-size:13px;
 }
 .shop-item .price{color:var(--brass-dark);font-weight:bold;text-align:right}
 .shop-item .restricted{color:var(--ink-soft);font-style:italic;font-size:11px}
 
-.cart-item{padding:8px 0;border-bottom:1px dashed rgba(122,95,36,.4);font-size:13px}
+.cart-item{padding:8px 0;border-bottom:1px dashed rgba(63,45,16,.45);font-size:13px}
 .cart-item:last-child{border-bottom:none}
 .cart-row{display:grid;grid-template-columns:1fr 70px 30px;gap:8px;align-items:center}
 .cart-row .price{color:var(--brass-dark);font-weight:bold;text-align:right}
 .cart-upgrades{margin-top:6px;display:flex;gap:6px;align-items:center;flex-wrap:wrap;font-size:11px;color:var(--ink-soft)}
 .cart-upgrades button{padding:2px 7px;font-size:10px;background:var(--brass-dark);color:var(--parchment);margin:0}
 .cart-upgrades button:hover{background:var(--brass)}
-.cart-upgrades button:disabled{background:#9a8a6a;color:#5a4a2a}
+.cart-upgrades button:disabled{background:#8a7a5a;color:#4a3a1a}
 
-.upg-tag{color:#3a6a1a;font-weight:bold}
+.upg-tag{color:#3a5a18;font-weight:bold}
 
 .hidden{display:none}
 
 .pool-banner{
-  background:rgba(255,252,240,.4);
+  background:rgba(232,218,184,.5);
   border-left:3px solid var(--brass);
   padding:8px 14px;border-radius:0 3px 3px 0;
   font-size:13px;margin-bottom:8px;
@@ -262,99 +277,115 @@ button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
 .line{padding:4px 0;font-size:14px;color:var(--ink)}
 .line b{color:var(--brass-dark)}
 .calc-block{
-  background:rgba(255,252,240,.3);
+  background:rgba(232,218,184,.4);
   padding:10px 14px;
   border-radius:3px;
   border:1px solid var(--brass-dark);
   margin-bottom:10px;
-  box-shadow:inset 0 0 10px rgba(90,58,30,.1);
+  box-shadow:inset 0 0 10px rgba(60,35,10,.18);
 }
-.calc-block .total{border-top:1px solid rgba(122,95,36,.5);padding-top:6px;margin-top:6px;font-size:15px}
+.calc-block .total{border-top:1px solid rgba(63,45,16,.55);padding-top:6px;margin-top:6px;font-size:15px}
 
-.xp-skill-row{display:grid;grid-template-columns:1fr 100px 90px;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(122,95,36,.35);align-items:center;font-size:14px}
+.xp-skill-row{display:grid;grid-template-columns:1fr 100px 90px;gap:8px;padding:6px 0;border-bottom:1px dashed rgba(63,45,16,.4);align-items:center;font-size:14px}
 .xp-skill-row:last-child{border-bottom:none}
 .xp-counter{
   font-size:17px;font-weight:bold;color:var(--brass-dark);
-  padding:10px;background:rgba(255,252,240,.4);
+  padding:10px;background:rgba(232,218,184,.5);
   border-radius:3px;border:1px solid var(--brass-dark);
   margin-bottom:10px;font-family:'IM Fell English SC',serif;
 }
 .xp-counter span{color:var(--ink-soft);font-weight:normal;font-size:13px;margin:0 8px}
-.xp-log div{padding:3px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px dashed rgba(122,95,36,.3)}
+.xp-log div{padding:3px 0;font-size:13px;color:var(--ink-soft);border-bottom:1px dashed rgba(63,45,16,.35)}
 .xp-purchased div{padding:3px 0;font-size:13px;color:var(--brass-dark)}
-/* Блокнот */
+
+/* Заметки */
 .notepad-tabs{
   display:flex;
   flex-wrap:wrap;
-  gap:4px;
-  margin:8px 0 10px;
-  padding-bottom:8px;
-  border-bottom:1px solid rgba(122,95,36,.35);
+  gap:2px;
+  margin:8px 0 0;
+  padding:0;
+  border-bottom:2px solid var(--brass-dark);
 }
 .notepad-tab{
   font-family:'IM Fell English SC',serif;
   letter-spacing:.5px;
-  background:rgba(255,252,240,.4);
+  background:
+    linear-gradient(180deg,rgba(160,130,70,.35),rgba(90,60,20,.35) 60%,rgba(50,30,10,.4));
   color:var(--ink-soft);
   border:1px solid var(--brass-dark);
-  border-radius:3px 3px 0 0;
-  padding:5px 12px;
+  border-bottom:none;
+  border-radius:4px 4px 0 0;
+  padding:6px 16px;
   margin:0;
   font-size:13px;
   font-weight:normal;
   cursor:pointer;
-  box-shadow:none;
-  text-shadow:none;
-  transition:background .1s;
+  box-shadow:inset 0 1px 0 rgba(255,220,150,.15),0 -1px 3px rgba(0,0,0,.4);
+  text-shadow:0 1px 0 rgba(255,220,150,.2);
+  transition:background .12s,color .12s;
 }
 .notepad-tab:hover{
-  background:rgba(212,181,106,.35);
+  background:linear-gradient(180deg,rgba(200,160,80,.5),rgba(120,85,35,.5) 60%,rgba(70,45,15,.55));
   color:var(--ink);
 }
 .notepad-tab.active{
-  background:linear-gradient(180deg,var(--brass-light),var(--brass));
-  color:#2a1e08;
+  background:linear-gradient(180deg,var(--brass-light),var(--brass) 55%,var(--brass-dark));
+  color:#1a1004;
   font-weight:bold;
-  box-shadow:inset 0 -2px 0 rgba(0,0,0,.15);
-  border-bottom-color:transparent;
+  box-shadow:
+    inset 0 2px 3px rgba(255,220,150,.4),
+    inset 0 -1px 2px rgba(0,0,0,.4);
+  text-shadow:0 1px 0 rgba(255,220,150,.35);
+  position:relative;
+  top:2px;
 }
 
 #notepad{
   width:100%;
-  min-height:220px;
+  min-height:240px;
   resize:vertical;
   font-family:'EB Garamond',Georgia,serif;
   font-size:16px;
-  line-height:1.6;
+  line-height:1.65;
   color:var(--ink);
   background:
-    repeating-linear-gradient(0deg,transparent 0 29px,rgba(122,95,36,.18) 29px 30px),
-    rgba(255,252,240,.35);
+    radial-gradient(circle at 8% 15%,rgba(90,60,20,.1),transparent 20%),
+    radial-gradient(circle at 92% 85%,rgba(70,45,15,.08),transparent 25%),
+    repeating-linear-gradient(0deg,transparent 0 30px,rgba(90,58,30,.12) 30px 31px),
+    linear-gradient(180deg,rgba(232,218,184,.85),rgba(217,199,160,.85) 60%,rgba(184,162,121,.85));
   background-attachment:local;
   border:1px solid var(--brass-dark);
-  border-radius:3px;
-  padding:6px 14px;
-  box-shadow:inset 0 0 12px rgba(90,58,30,.15);
+  border-top:none;
+  border-radius:0 0 3px 3px;
+  padding:8px 16px;
+  box-shadow:
+    inset 0 0 40px rgba(60,35,10,.25),
+    inset 0 2px 8px rgba(0,0,0,.2);
   box-sizing:border-box;
 }
 #notepad:focus{
   outline:none;
   border-color:var(--brass);
-  box-shadow:inset 0 0 12px rgba(90,58,30,.15),0 0 0 2px rgba(212,181,106,.45);
+  box-shadow:
+    inset 0 0 40px rgba(60,35,10,.25),
+    inset 0 2px 8px rgba(0,0,0,.2),
+    0 0 0 2px rgba(168,133,68,.5);
 }
-::selection{background:rgba(212,181,106,.6);color:var(--ink)}
+
+::selection{background:rgba(168,133,68,.6);color:var(--ink)}
 </style>
 </head>
 <body>
 <div class="app">
 <h1>Чарлист — Pathfinder d6</h1>
 <div class="toolbar">
-<button onclick="save()">💾 Сохранить</button>
-<button onclick="load()">📂 Загрузить</button>
-<button onclick="exportJSON()">📤 Экспорт</button>
-<button onclick="importJSON()">📥 Импорт</button>
-<button onclick="toggleXP()">📈 Опыт</button>
-<button class="danger" onclick="reset()">🗑 Сброс</button>
+<button onclick="save()">Сохранить</button>
+<button onclick="load()">Загрузить</button>
+<button onclick="exportJSON()">Экспорт</button>
+<button onclick="importJSON()">Импорт</button>
+<button onclick="toggleXP()">Опыт</button>
+<button class="danger" onclick="reset()">Сброс</button>
 </div>
 <section>
 <h2>Персонаж</h2>
@@ -419,11 +450,11 @@ button.small{padding:3px 9px;font-size:12px;letter-spacing:0}
 <h3>Общее</h3><div class="stats-grid" id="stats"></div>
 </section>
 <section>
-<h2>Блокнот</h2>
+<h2>Заметки</h2>
 <div class="notepad-tabs" id="notepad-tabs">
-<button type="button" class="notepad-tab active" data-tab="bio" onclick="switchNotepadTab('bio')">📜 Предыстория</button>
-<button type="button" class="notepad-tab" data-tab="notes" onclick="switchNotepadTab('notes')">🗒️ Заметки</button>
-<button type="button" class="notepad-tab" data-tab="quests" onclick="switchNotepadTab('quests')">⚔️ Квесты</button>
+<button type="button" class="notepad-tab active" data-tab="bio" onclick="switchNotepadTab('bio')">Предыстория</button>
+<button type="button" class="notepad-tab" data-tab="notes" onclick="switchNotepadTab('notes')">Заметки</button>
+<button type="button" class="notepad-tab" data-tab="quests" onclick="switchNotepadTab('quests')">Квесты</button>
 </div>
 <textarea id="notepad" rows="12" placeholder="Пиши здесь..."></textarea>
 </section>
@@ -1198,7 +1229,6 @@ function changeLeveled(delta,type){
 }
 function toggleShopCat(catKey,isOpen){
   if(!state.shopOpen)state.shopOpen={};
-  if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
   if(isOpen)state.shopOpen[catKey]=true;
   else delete state.shopOpen[catKey];
 }
