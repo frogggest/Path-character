@@ -83,6 +83,16 @@ button.small{padding:3px 8px;font-size:11px}
 .xp-log div{padding:3px 0;font-size:12px;color:#aaa;border-bottom:1px solid #2a2a2a}
 .xp-purchased div{padding:3px 0;font-size:12px;color:#d4a95a}
 
+/* Бюджет */
+#money-banner{
+  background:#2a2a2a;
+  border-left:3px solid #d4a95a;
+  padding:8px 12px;
+  border-radius:4px;
+  font-size:13px;
+  margin-bottom:8px;
+}
+#money-banner b{color:#d4a95a}
 /* Заметки */
 .notepad-tabs{
   display:flex;
@@ -145,6 +155,7 @@ button.small{padding:3px 8px;font-size:11px}
 <button onclick="exportJSON()">Экспорт</button>
 <button onclick="importJSON()">Импорт</button>
 <button onclick="toggleXP()">Опыт</button>
+<button onclick="toggleMoney()">Казна</button>
 <button class="danger" onclick="reset()">Сброс</button>
 </div>
 <section>
@@ -194,6 +205,15 @@ button.small{padding:3px 8px;font-size:11px}
 <section id="beasts-section" class="hidden">
 <h2>Верный зверь <span id="beast-counter" class="counter"></span></h2>
 <div id="beast-block"></div>
+</section>
+<section id="money-section" class="hidden">
+<h2>Казна</h2>
+<div class="pool-banner" id="money-banner"></div>
+<div class="row" style="margin-bottom:8px">
+<label>Получил за квест <input type="number" id="money-earn" min="1" value="30"></label>
+<button onclick="addMoney()">+ Добавить</button>
+</div>
+<div class="xp-log" id="money-log"></div>
 </section>
 <section>
 <h2>Снаряжение <span id="money-counter" class="counter"></span></h2>
@@ -585,7 +605,7 @@ magusSchools:[],domainChoices:{},rangerChoice:'',rangerType:'',beast:'',
 druidOrder:'',wildForm:'',elementalForm:'',sorcererOrigin:'',potions:{},alchemyFire:0,
 xpEarned:0,xpSpent:0,sessionLog:[],purchasedSpells:[],xpOpen:false,
 spellEnhance:{},healPotionLevel:0,foodLevel:0,manaElixirLevel:0,shopOpen:{},
-notepad:{bio:'',notes:'',quests:''}};
+notepad:{bio:'',notes:'',quests:''},moneyEarned:0,moneyLog:[]};
 function xpAvail(){return state.xpEarned-state.xpSpent;}
 function canUseMagic(){if(state.class==='cleric'||state.class==='paladin')return true;return state.priority==='B';}
 function initSelects(){
@@ -692,7 +712,7 @@ function updateGodWrap(){
   if(cls.hasGod) wrap.classList.remove('hidden');
   else wrap.classList.add('hidden');
 }
-function render(){updateGodWrap();renderAttrs();renderDomains();renderSpecial();renderSkills();renderAlchemy();renderSpells();renderBeasts();renderShop();renderCart();renderStats();renderNotepad();renderRaceAbility();renderClassInfo();renderMoney();if(state.xpOpen)renderXP();}
+function render(){updateGodWrap();renderAttrs();renderDomains();renderSpecial();renderSkills();renderAlchemy();renderSpells();renderBeasts();renderShop();renderCart();renderStats();renderNotepad();renderRaceAbility();renderClassInfo();renderMoney();if(state.xpOpen)renderXP();if(state.moneyOpen)renderMoneyExtra();}
 function renderAttrs(){
 const maxes=getMaxes();const grid=document.getElementById('attr-grid');grid.innerHTML='';
 for(const k in ATTRS){const max=maxes[k]||6;const v=state.attrs[k]||1;
@@ -853,7 +873,7 @@ function enhanceSpell(id){
 const cur=getSpellEnhanceLevel(id);
 if(cur>=5){alert('Максимум +5.');return;}
 const cost=spellEnhCostNext(cur);
-const pool=PRIORITIES[state.priority].money;
+const pool=PRIORITIES[state.priority].money+(state.moneyEarned||0);
 if(totalSpentMoney()+cost>pool){alert('Не хватает денег. Нужно: '+cost+', доступно: '+(pool-totalSpentMoney()));return;}
 state.spellEnhance[id]=cur+1;
 render();save();}
@@ -999,7 +1019,7 @@ if(id==='healpotion_base'||id==='food_base'||id==='mana_elixir_base'){
   const arr=isHeal?HEAL_POTION_LEVELS:isFood?FOOD_LEVELS:MANA_ELIXIR_LEVELS;
   const lvl=state[key]||0;
   const cur=arr[lvl];
-  const pool=PRIORITIES[state.priority].money;
+  const pool=PRIORITIES[state.priority].money+(state.moneyEarned||0);
   if(totalSpentMoney()+cur.price>pool){alert('Не хватает золота.');return;}
   let name;
   if(isHeal)name=`Зелье лечения (${cur.heal}хп)`;
@@ -1013,7 +1033,7 @@ if(cat==='shields'){
   if(hasTwo){alert('Нельзя купить щит с двуручным оружием.');return;}
   if(findDualPair()){alert('Нельзя купить щит с парным оружием.');return;}
 }
-const pool=PRIORITIES[state.priority].money;
+const pool=PRIORITIES[state.priority].money+(state.moneyEarned||0);
 if(totalSpentMoney()+item.price>pool){alert('Не хватает золота.');return;}
 state.cart.push({cat,id,name:item.name,price:item.price,sharp:0,reinf:0});render();save();}
 function removeFromCart(i){state.cart.splice(i,1);render();save();}
@@ -1024,7 +1044,7 @@ if(!canBeSharpened(c)){alert('Это оружие нельзя заточить.
 if(c.sharp>=3){alert('Максимум +3.');return;}
 const it=findItem(c.cat,c.id);
 const cost=sharpCost(c.price,c.sharp+1,it&&it.cheapSharp);
-const pool=PRIORITIES[state.priority].money;
+const pool=PRIORITIES[state.priority].money+(state.moneyEarned||0);
 if(totalSpentMoney()+cost>pool){alert('Не хватает денег. Нужно: '+cost);return;}
 c.sharp++;render();save();}
 function reinforceItem(i){
@@ -1032,7 +1052,7 @@ const c=state.cart[i];if(!c)return;
 if(!isArmorItem(c.cat))return;
 if(c.reinf>=2){alert('Максимум +2.');return;}
 const cost=sharpCost(c.price,c.reinf+1,false);
-const pool=PRIORITIES[state.priority].money;
+const pool=PRIORITIES[state.priority].money+(state.moneyEarned||0);
 if(totalSpentMoney()+cost>pool){alert('Не хватает денег. Нужно: '+cost);return;}
 c.reinf++;render();save();}
 function reduceSharpen(i){const c=state.cart[i];if(!c||!c.sharp)return;c.sharp--;render();save();}
@@ -1111,13 +1131,57 @@ if(isArmorItem(c.cat)){
 }
   cart.innerHTML+=`<div class="cart-item"><div class="cart-row"><span>${c.name}${extra}</span><span class="price">${cartItemTotal(c)}м</span><button class="small danger" onclick="removeFromCart(${i})">×</button></div>${upgRow?`<div class="cart-upgrades">${upgRow}</div>`:''}</div>`;
 });}
-function renderMoney(){const pool=PRIORITIES[state.priority].money;
-const spent=totalSpentMoney();const c=document.getElementById('money-counter');
-c.textContent=`${spent} / ${pool} монет`;c.className='counter '+(spent>pool?'over':spent===pool?'ok':'');}
-function renderNotepad(){
+function totalBudget(){
+  return PRIORITIES[state.priority].money + (state.moneyEarned||0);
+}
+function toggleMoney(){
+  const s=document.getElementById('money-section');
+  s.classList.toggle('hidden');
+  renderMoney();
+}
+function addMoney(){
+  const inp=document.getElementById('money-earn');
+  const amt=Math.max(1,parseInt(inp.value)||0);
+  if(!state.moneyLog)state.moneyLog=[];
+  state.moneyEarned=(state.moneyEarned||0)+amt;
+  state.moneyLog.push({n:state.moneyLog.length+1,amount:amt});
+  inp.value=30;
+  renderMoney();renderXP();save();
+}
+function renderMoneyExtra(){
+  const banner=document.getElementById('money-banner');
+  if(!banner)return;
+  const base=PRIORITIES[state.priority].money;
+  const earned=state.moneyEarned||0;
+  const spent=totalSpentMoney();
+  const left=base+earned-spent;
+  let html=`Стартовые: <b>${base}</b> | Заработано: <b>${earned}</b> | Потрачено: <b>${spent}</b> | Остаток: <b>${left}</b>`;
+  if(left<0)html+=` <span style="color:#e05a5a">— перерасход!</span>`;
+  banner.innerHTML=html;
+  const log=document.getElementById('money-log');
+  if(log){
+    log.innerHTML=(state.moneyLog&&state.moneyLog.length)
+      ? state.moneyLog.map(m=>`<div>Награда ${m.n}: +${m.amount} монет</div>`).join('')
+      : '<p class="hint">Пока нет наград.</p>';
+  }
+}
+function renderMoney(){
+  const base=PRIORITIES[state.priority].money;
+  const earned=state.moneyEarned||0;
+  const pool=base+earned;
+  const spent=totalSpentMoney();
+  const c=document.getElementById('money-counter');
+  c.textContent=`${spent} / ${pool} монет`;
+  c.className='counter '+(spent>pool?'over':spent===pool?'ok':'');
+  renderMoneyExtra();
+}
   const el=document.getElementById('notepad');
   if(!el)return;
   if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
+  if(state.moneyEarned===undefined)state.moneyEarned=0;
+if(!state.moneyLog)state.moneyLog=[];
+  if(state.moneyEarned===undefined)state.moneyEarned=0;
+if(!state.moneyLog)state.moneyLog=[];
   const tab=document.querySelector('.notepad-tab.active')?.dataset.tab||'bio';
   el.value=state.notepad[tab]||'';
   el.placeholder=({bio:'Опиши прошлое персонажа...',notes:'Любые заметки по игре...',quests:'Активные задачи и зацепки...'})[tab]||'';
