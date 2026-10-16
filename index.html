@@ -155,7 +155,7 @@ button.small{padding:3px 8px;font-size:11px}
 <button onclick="exportJSON()">Экспорт</button>
 <button onclick="importJSON()">Импорт</button>
 <button onclick="toggleXP()">Опыт</button>
-<button onclick="toggleMoney()">Казна</button>
+<button onclick="toggleMoney()">Бюджет</button>
 <button class="danger" onclick="reset()">Сброс</button>
 </div>
 <section>
@@ -207,7 +207,7 @@ button.small{padding:3px 8px;font-size:11px}
 <div id="beast-block"></div>
 </section>
 <section id="money-section" class="hidden">
-<h2>Казна</h2>
+<h2>Бюджет</h2>
 <div class="pool-banner" id="money-banner"></div>
 <div class="row" style="margin-bottom:8px">
 <label>Получил за квест <input type="number" id="money-earn" min="1" value="30"></label>
@@ -605,7 +605,7 @@ magusSchools:[],domainChoices:{},rangerChoice:'',rangerType:'',beast:'',
 druidOrder:'',wildForm:'',elementalForm:'',sorcererOrigin:'',potions:{},alchemyFire:0,
 xpEarned:0,xpSpent:0,sessionLog:[],purchasedSpells:[],xpOpen:false,
 spellEnhance:{},healPotionLevel:0,foodLevel:0,manaElixirLevel:0,shopOpen:{},
-notepad:{bio:'',notes:'',quests:''},moneyEarned:0,moneyLog:[]};
+notepad:{bio:'',notes:'',quests:''},moneyEarned:0,moneyLog:[],moneyOpen:false};
 function xpAvail(){return state.xpEarned-state.xpSpent;}
 function canUseMagic(){if(state.class==='cleric'||state.class==='paladin')return true;return state.priority==='B';}
 function initSelects(){
@@ -1137,6 +1137,7 @@ function totalBudget(){
 function toggleMoney(){
   const s=document.getElementById('money-section');
   s.classList.toggle('hidden');
+  state.moneyOpen=!s.classList.contains('hidden');
   renderMoney();
 }
 function addMoney(){
@@ -1175,11 +1176,10 @@ function renderMoney(){
   c.className='counter '+(spent>pool?'over':spent===pool?'ok':'');
   renderMoneyExtra();
 }
+function renderNotepad(){
   const el=document.getElementById('notepad');
   if(!el)return;
   if(!state.notepad)state.notepad={bio:'',notes:'',quests:''};
-  if(state.moneyEarned===undefined)state.moneyEarned=0;
-if(!state.moneyLog)state.moneyLog=[];
   if(state.moneyEarned===undefined)state.moneyEarned=0;
 if(!state.moneyLog)state.moneyLog=[];
   const tab=document.querySelector('.notepad-tab.active')?.dataset.tab||'bio';
