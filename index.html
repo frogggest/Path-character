@@ -156,7 +156,7 @@ button.small{padding:3px 8px;font-size:11px}
 <button onclick="importJSON()">Импорт</button>
 <button onclick="toggleXP()">Опыт</button>
 <button onclick="toggleMoney()">Бюджет</button>
-<button class="danger" onclick="reset()">Сброс</button>
+<button onclick="showFullSheet()">Итог</button>
 </div>
 <section>
 <h2>Персонаж</h2>
@@ -238,6 +238,14 @@ button.small{padding:3px 8px;font-size:11px}
 </div>
 <textarea id="notepad" rows="12" placeholder="Пиши здесь..."></textarea>
 </section>
+<section id="full-sheet-section" class="hidden">
+<h2>Итоговый чарлист</h2>
+<textarea id="full-sheet-text" readonly style="width:100%;min-height:400px;font-family:monospace;font-size:13px;line-height:1.5"></textarea>
+<div class="row" style="margin-top:8px">
+<button onclick="copyFullSheet()">Копировать</button>
+<button class="danger" onclick="document.getElementById('full-sheet-section').classList.add('hidden')">Закрыть</button>
+</div>
+</section>
 <section id="xp-section" class="hidden">
 <h2>Развитие персонажа</h2>
 <div class="xp-counter" id="xp-counter"></div>
@@ -316,10 +324,10 @@ fighter:{name:'Воин',fixed:['blades','blunt','axes','polearms','unarmed','du
 wizard:{name:'Волшебник',fixed:['staves','evocation','necromancy','transmutation','illusion','enchantment','divination','abjuration','conjuration'],info:'Заклинания стоят 1 очко вместо 2.'},
 druid:{name:'Друид',fixed:['staves','polearms','evocation','abjuration','conjuration'],info:'Орден: Дикий/Бури/Зверя/Листа.',hasDruidOrder:true},
 cleric:{name:'Жрец',fixed:[],info:'Навыки из домейнов бога.',hasGod:true},
-monk:{name:'Монах',fixed:['staves','unarmed','blades','evocation','abjuration','conjuration','qi'],info:'Ци: Железная кожа, Очищение.'},
+monk:{name:'Монах',fixed:['staves','unarmed','blades','abjuration','conjuration','qi'],info:'Ци: Железная кожа, Очищение.'},
 paladin:{name:'Паладин',fixed:['blades','blunt','unarmed','bows','crossbows','conjuration','abjuration'],info:'Кары, Божественная защита.',hasGod:true},
 ranger:{name:'Следопыт',fixed:['bows','crossbows','blades','polearms','conjuration','transmutation','thrown'],info:'+2 против выбранного врага или в местности.',hasRangerChoice:true,hasBeast:true},
-sorcerer:{name:'Чародей',fixed:['blades','evocation','necromancy','transmutation','illusion','enchantment','abjuration','conjuration'],info:'Источник крови даёт +2 к школе.',hasSorcererOrigin:true},
+sorcerer:{name:'Чародей',fixed:['blades','evocation','necromancy','transmutation','illusion','enchantment','divination','abjuration','conjuration'],info:'Источник крови даёт +2 к школе.',hasSorcererOrigin:true},
 rogue:{name:'Плут',fixed:['blades','thrown','illusion','transmutation','bows'],info:'Невидимость. +3 урона из невидимости.'},
 magus:{name:'Магос',fixed:['blades','blunt','axes','unarmed'],info:'Оружейные не выше магических больше чем на 1.',hasMagusSchools:true}
 };
@@ -1273,6 +1281,148 @@ state.cart.forEach(c=>{
   }
 });
 s.innerHTML=`<div class="stat-box"><div class="label">Здоровье</div><div class="value">${hp}</div></div><div class="stat-box"><div class="label">Очки магии/зверей</div><div class="value">${spent}/${pool}</div><div class="label">общий пул</div></div>${weaponInfo.length?`<div class="stat-box"><div class="label">Заточенное оружие</div>${weaponInfo.map(w=>`<div class="value" style="font-size:13px;font-weight:normal;color:#5ae05a;margin-top:4px">${w}</div>`).join('')}</div>`:''}`;}
+function buildFullSheet(){
+  const lines=[];
+  const P=PRIORITIES[state.priority];
+  const race=RACES[state.race];
+  const sub=race.subraces&&state.subrace?race.subraces[state.subrace]:null;
+  const cls=CLASSES[state.class];
+
+  lines.push('════════ ЧАРЛИСТ ════════');
+  lines.push('');
+  lines.push('【 ПЕРСОНАЖ 】');
+  lines.push(`Имя: ${state.name||'—'}`);
+  const genderMap={male:'Мужской',female:'Женский','':'—'};
+  lines.push(`Пол: ${genderMap[state.gender]||'—'}`);
+  lines.push(`Раса: ${race.name}${sub?' ('+sub.name+')':''}`);
+  lines.push(`Класс: ${cls.name}`);
+  if(state.god&&GODS[state.god]) lines.push(`Бог: ${GODS[state.god].name}`);
+  lines.push(`Приоритет: ${state.priority} (${P.attr} атр / ${P.skills} нав / ${P.money} мон)`);
+  lines.push('');
+
+  lines.push('【 АТРИБУТЫ 】');
+  for(const k in ATTRS){
+    const max=getMaxes()[k]||6;
+    lines.push(`  ${ATTRS[k]}: ${state.attrs[k]||1} / ${max}`);
+  }
+  lines.push('');
+
+  lines.push('【 НАВЫКИ 】');
+  const skillIds=Object.keys(state.skills).filter(id=>SKILLS[id]&&state.skills[id]>0);
+  if(!skillIds.length) lines.push('  —');
+  else skillIds.sort().forEach(id=>{
+    const s=SKILLS[id];
+    const v=state.skills[id];
+    const a=getAttrValue(s.attr);
+    const b=getSkillBonus(id);
+    const total=v+a+b;
+    lines.push(`  ${s.name} (${getAttrLabel(s.attr)}): ${v} → ${total}d6${b?` (+${b} наследие)`:''}`);
+  });
+  lines.push('');
+
+  lines.push('【 ЗАКЛИНАНИЯ 】');
+  const spellIds=Object.keys(state.spells).filter(id=>state.spells[id]);
+  if(!spellIds.length) lines.push('  —');
+  else spellIds.forEach(id=>{
+    let name=id;
+    if(id==='free_origin'&&state.sorcererOrigin&&SORCERER_FREE_SPELLS[state.sorcererOrigin]) name=SORCERER_FREE_SPELLS[state.sorcererOrigin].text+' (бесплатно)';
+    else if(id.startsWith('purchased_')){
+      const idx=parseInt(id.split('_')[1]);
+      const p=state.purchasedSpells[idx];
+      name=p?p.text+' (куплено)':id;
+    } else {
+      const parts=id.split('_');
+      const school=parts[0];const idx=parseInt(parts[1]);
+      name=SPELLS[school]?SPELLS[school].list[idx]:id;
+    }
+    const enh=state.spellEnhance[id]||0;
+    lines.push(`  • ${name}${enh?` +${enh}`:''}`);
+  });
+  lines.push('');
+
+  lines.push('【 ОРУЖИЕ / СНАРЯЖЕНИЕ 】');
+  if(!state.cart.length) lines.push('  —');
+  else state.cart.forEach(c=>{
+    const it=findItem(c.cat,c.id);
+    let s=`  • ${c.name}`;
+    if(it&&it.dmg!==undefined) s+=` (урон ${it.dmg}${it.dmg2!==undefined?`(${it.dmg2})`:''})`;
+    if(it&&it.def!==undefined) s+=` (защита ${it.def})`;
+    if(c.twoHanded) s+=' [двуручный хват]';
+    if(c.sharp) s+=` [+${c.sharp} заточка]`;
+    if(c.reinf) s+=` [+${c.reinf} укрепление]`;
+    s+=` — ${cartItemTotal(c)}м`;
+    lines.push(s);
+  });
+  lines.push('');
+
+  lines.push('【 ИТОГОВЫЕ ХАРАКТЕРИСТИКИ 】');
+  const hp=10+(state.attrs.TEL||1)*2;
+  lines.push(`  Здоровье: ${hp}`);
+  lines.push(`  Очки магии: ${getTotalSpent()} / ${getMagicPool()}`);
+  lines.push(`  Деньги: потрачено ${totalSpentMoney()} / ${totalBudget()}`);
+  lines.push('');
+
+  lines.push('【 АТАКИ 】');
+  const weaponIds=Object.keys(state.skills).filter(id=>SKILLS[id]&&SKILLS[id].cat==='weapon'&&state.skills[id]>0);
+  if(!weaponIds.length) lines.push('  —');
+  else weaponIds.forEach(id=>{
+    const s=SKILLS[id];
+    lines.push(`  ${s.name}: ${state.skills[id]} + ${getAttrValue(s.attr)} (${getAttrLabel(s.attr)}) = ${state.skills[id]+getAttrValue(s.attr)}d6`);
+  });
+  lines.push('');
+
+  let armorBonus=0,shieldBonus=0;
+  state.cart.forEach(c=>{
+    const it=findItem(c.cat,c.id);if(!it)return;
+    if(c.cat==='armor') armorBonus=Math.max(armorBonus,(it.def||0)+(c.reinf||0));
+    if(c.cat==='shields') shieldBonus=Math.max(shieldBonus,(it.def||0)+(c.reinf||0));
+  });
+  const defTotal=(state.skills.defense||0)+armorBonus+shieldBonus;
+  lines.push('【 ЗАЩИТА 】');
+  lines.push(`  Навык: ${state.skills.defense||0} | Броня: +${armorBonus} | Щит: +${shieldBonus} | Итого: ${defTotal}d6`);
+  lines.push('');
+
+  const specials=[];
+  if(state.class==='ranger'&&state.rangerChoice) specials.push(`Следопыт: +2 против ${state.rangerChoice}`);
+  if(state.class==='magus'&&state.magusSchools?.length) specials.push(`Магос: школы ${state.magusSchools.map(s=>SKILLS[s].name).join(', ')}`);
+  if(state.class==='druid'&&state.druidOrder){const o={wild:'Дикий',storm:'Буря',beast:'Зверь',leaf:'Лист'};specials.push(`Друид: орден ${o[state.druidOrder]}`);}
+  if(state.class==='sorcerer'&&state.sorcererOrigin&&SORCERER_ORIGINS[state.sorcererOrigin]) specials.push(`Чародей: ${SORCERER_ORIGINS[state.sorcererOrigin].name}`);
+  if(state.beast&&BEASTS[state.beast]) specials.push(`Зверь: ${BEASTS[state.beast].name}`);
+  if(state.wildForm&&BEASTS[state.wildForm]) specials.push(`Форма: ${BEASTS[state.wildForm].name}`);
+  if(state.elementalForm&&ELEMENTAL_FORMS[state.elementalForm]) specials.push(`Элементаль: ${ELEMENTAL_FORMS[state.elementalForm].name}`);
+  if(specials.length){
+    lines.push('【 ОСОБОЕ 】');
+    specials.forEach(s=>lines.push(`  • ${s}`));
+    lines.push('');
+  }
+
+  if(state.notepad){
+    const tabs={bio:'Предыстория',notes:'Заметки',quests:'Квесты'};
+    for(const t in tabs){
+      if(state.notepad[t]&&state.notepad[t].trim()){
+        lines.push(`【 ${tabs[t]} 】`);
+        lines.push(state.notepad[t].trim());
+        lines.push('');
+      }
+    }
+  }
+
+  lines.push('════════════════════════');
+  return lines.join('\n');
+}
+
+function showFullSheet(){
+  const sec=document.getElementById('full-sheet-section');
+  sec.classList.remove('hidden');
+  document.getElementById('full-sheet-text').value=buildFullSheet();
+  sec.scrollIntoView({behavior:'smooth'});
+}
+
+function copyFullSheet(){
+  const ta=document.getElementById('full-sheet-text');
+  ta.select();
+  document.execCommand('copy');
+}
 function toggleXP(){state.xpOpen=!state.xpOpen;
 document.getElementById('xp-section').classList.toggle('hidden',!state.xpOpen);
 if(state.xpOpen){renderXP();window.scrollTo(0,document.getElementById('xp-section').offsetTop-16);}}
