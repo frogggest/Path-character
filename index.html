@@ -879,7 +879,24 @@ function setAlchemyFire(v){v=Math.max(0,Math.min(4,parseInt(v)||0));state.alchem
 function getSpellEnhanceLevel(id){return state.spellEnhance[id]||0;}
 function spellEnhCostNext(lvl){return 30+lvl*20;}
 function enhanceSpell(id){
-const cur=getSpellEnhanceLevel(id);
+  const parts = id.split('_');
+  const school = parts[0];
+  const idx = parseInt(parts[1]);
+  let spellName = '';
+  if (SPELLS[school] && SPELLS[school].list[idx]) spellName = SPELLS[school].list[idx];
+  
+  const NO_ENHANCE_SCHOOLS = ['illusion', 'divination'];
+  const NO_ENHANCE_NAMES = [
+    'Разговор с мертвыми', 'Обмен', 'Трансфигурация', 'Перевертыш',
+    'Дружба', 'Провокация', 'Повеление', 'Ремонт', 'Антимагия', 'Отражение заклинаний'
+  ];
+  
+  if (NO_ENHANCE_SCHOOLS.includes(school) || NO_ENHANCE_NAMES.includes(spellName)) {
+    alert('Это заклинание нельзя усилить.');
+    return;
+  }
+
+  const cur = getSpellEnhanceLevel(id);
 if(cur>=5){alert('Максимум +5.');return;}
 const cost=spellEnhCostNext(cur);
 const pool=PRIORITIES[state.priority].money+(state.moneyEarned||0);
@@ -916,12 +933,16 @@ magicAvail.forEach(sid=>{
     const fs=SORCERER_FREE_SPELLS[state.sorcererOrigin];
     if(fs.school===sid&&fs.text===s){return;}
   }
-  const id=`${sid}_${i}`;
+ const id=`${sid}_${i}`;
   const checked=state.spells[id]?'checked':'';
   const enhLvl=getSpellEnhanceLevel(id);
   const enhTag=enhLvl>0?` <span style="color:#5ae05a">+${enhLvl}</span>`:'';
-  list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span>${s}${enhTag}</span></label><span class="spell-enh"><button onclick="enhanceSpell('${id}')" title="Усилить (+${spellEnhCostNext(enhLvl)} мон.)">+</button>${enhLvl>0?`<button onclick="reduceSpell('${id}')" title="Убрать усиление">−</button>`:''}</span></div>`;
-});
+  const canEnhance = !['illusion', 'divination'].includes(sid) && !['Разговор с мертвыми', 'Обмен', 'Трансфигурация', 'Перевертыш', 'Дружба', 'Провокация', 'Повеление', 'Ремонт', 'Антимагия', 'Отражение заклинаний'].includes(s);
+  if (canEnhance) {
+    list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span>${s}${enhTag}</span></label><span class="spell-enh"><button onclick="enhanceSpell('${id}')" title="Усилить (+${spellEnhCostNext(enhLvl)} мон.)">+</button>${enhLvl>0?`<button onclick="reduceSpell('${id}')" title="Убрать усиление">−</button>`:''}</span></div>`;
+  } else {
+    list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span>${s}${enhTag}</span></label><span class="spell-enh"></span></div>`;
+  }
   if(state.class==='sorcerer'&&state.sorcererOrigin&&SORCERER_FREE_SPELLS[state.sorcererOrigin]){
     const fs=SORCERER_FREE_SPELLS[state.sorcererOrigin];
     if(fs.school===sid){
