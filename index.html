@@ -925,24 +925,29 @@ if(parts.length)bhtml+=` (${parts.join(', ')})`;
 if(state.purchasedSpells&&state.purchasedSpells.length)bhtml+=` | Куплено за опыт: ${state.purchasedSpells.length}`;
 if(total>pool)bhtml+=` <span style="color:#e05a5a">— перерасход!</span>`;banner.innerHTML=bhtml;
 list.innerHTML='';
+
 magicAvail.forEach(sid=>{
   const sp=SPELLS[sid];if(!sp)return;
   list.innerHTML+=`<div class="spell-group"><h3>${sp.name} <span class="skill-attr">(${spellCost} очк${spellCost===1?'о':'а'} за заклинание)</span></h3><div class="spell-list">`;
+  
   sp.list.forEach((s,i)=>{
-  if(state.class==='sorcerer'&&state.sorcererOrigin&&SORCERER_FREE_SPELLS[state.sorcererOrigin]){
-    const fs=SORCERER_FREE_SPELLS[state.sorcererOrigin];
-    if(fs.school===sid&&fs.text===s){return;}
-  }
- const id=`${sid}_${i}`;
-  const checked=state.spells[id]?'checked':'';
-  const enhLvl=getSpellEnhanceLevel(id);
-  const enhTag=enhLvl>0?` <span style="color:#5ae05a">+${enhLvl}</span>`:'';
-  const canEnhance = !['illusion', 'divination'].includes(sid) && !['Разговор с мертвыми', 'Обмен', 'Трансфигурация', 'Перевертыш', 'Дружба', 'Провокация', 'Повеление', 'Ремонт', 'Антимагия', 'Отражение заклинаний'].includes(s);
-  if (canEnhance) {
-    list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span>${s}${enhTag}</span></label><span class="spell-enh"><button onclick="enhanceSpell('${id}')" title="Усилить (+${spellEnhCostNext(enhLvl)} мон.)">+</button>${enhLvl>0?`<button onclick="reduceSpell('${id}')" title="Убрать усиление">−</button>`:''}</span></div>`;
-  } else {
-    list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span>${s}${enhTag}</span></label><span class="spell-enh"></span></div>`;
-  }
+    if(state.class==='sorcerer'&&state.sorcererOrigin&&SORCERER_FREE_SPELLS[state.sorcererOrigin]){
+      const fs=SORCERER_FREE_SPELLS[state.sorcererOrigin];
+      if(fs.school===sid&&fs.text===s){return;}
+    }
+    const id=`${sid}_${i}`;
+    const checked=state.spells[id]?'checked':'';
+    const enhLvl=getSpellEnhanceLevel(id);
+    const enhTag=enhLvl>0?` <span style="color:#5ae05a">+${enhLvl}</span>`:'';
+    const canEnhance = !['illusion', 'divination'].includes(sid) && !['Разговор с мертвыми', 'Обмен', 'Трансфигурация', 'Перевертыш', 'Дружба', 'Провокация', 'Повеление', 'Ремонт', 'Антимагия', 'Отражение заклинаний'].includes(s);
+    
+    if (canEnhance) {
+      list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span>${s}${enhTag}</span></label><span class="spell-enh"><button onclick="enhanceSpell('${id}')" title="Усилить (+${spellEnhCostNext(enhLvl)} мон.)">+</button>${enhLvl>0?`<button onclick="reduceSpell('${id}')" title="Убрать усиление">−</button>`:''}</span></div>`;
+    } else {
+      list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span>${s}${enhTag}</span></label><span class="spell-enh"></span></div>`;
+    }
+  });
+
   if(state.class==='sorcerer'&&state.sorcererOrigin&&SORCERER_FREE_SPELLS[state.sorcererOrigin]){
     const fs=SORCERER_FREE_SPELLS[state.sorcererOrigin];
     if(fs.school===sid){
@@ -953,6 +958,7 @@ magicAvail.forEach(sid=>{
       list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span style="color:#5ae05a">${fs.text}${enhTag} <i style="font-size:10px;opacity:0.7">(бесплатно от наследия)</i></span></label><span class="spell-enh"><button onclick="enhanceSpell('${id}')" title="Усилить (+${spellEnhCostNext(enhLvl)} мон.)">+</button>${enhLvl>0?`<button onclick="reduceSpell('${id}')" title="Убрать усиление">−</button>`:''}</span></div>`;
     }
   }
+  
   (state.purchasedSpells||[]).forEach((p,pi)=>{
     if(p.school!==sid)return;
     const id=`purchased_${pi}`;
@@ -961,8 +967,10 @@ magicAvail.forEach(sid=>{
     const enhTag=enhLvl>0?` <span style="color:#5ae05a">+${enhLvl}</span>`:'';
     list.innerHTML+=`<div class="spell-item"><label><input type="checkbox" ${checked} onchange="toggleSpell('${id}')"><span style="color:#5ae05a">${p.text}${enhTag} <i style="font-size:10px;opacity:0.7">(куплено)</i></span></label><span class="spell-enh"><button onclick="enhanceSpell('${id}')" title="Усилить (+${spellEnhCostNext(enhLvl)} мон.)">+</button>${enhLvl>0?`<button onclick="reduceSpell('${id}')" title="Убрать усиление">−</button>`:''}</span></div>`;
   });
+  
   list.innerHTML+='</div></div>';
-});}
+});
+}
 function renderBeasts(){
 const section=document.getElementById('beasts-section');const counter=document.getElementById('beast-counter');
 const block=document.getElementById('beast-block');
